@@ -19,28 +19,45 @@
 <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 
 <script type="text/babel">
 
-    class Welcome extends React.Component {
+    class Main extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {};
+            this.state = {
+                init: false,
+                userName: ''
+            };
         };
 
-        render() {
+        setValueUser = () => {
+            const userName = $('#name').val();
+            console.log(userName);
+            this.setState({userName: userName});
+        };
+
+        welcome() {
             return (
                 <div id="welcome">
                     <h3>Введіть своє ім'я</h3>
                     <textarea required wrap="off" id="name"
-                              placeholder="Ваше ім'я"><br>
-                    <button id="newGame">Почати гру</button>
+                              placeholder="Ваше ім'я"></textarea><br />
+                    <button onClick={this.setValueUser} id="newGame">Почати гру</button>
                 </div>
             )
         }
+
+        render() {
+            if(!this.state.init) {
+                return this.welcome();
+            } else {}
+        }
     }
 
+    ReactDOM.render(<Main/>, document.getElementById("content"));
 
 </script>
 
