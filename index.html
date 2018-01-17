@@ -29,31 +29,75 @@
             super(props);
             this.state = {
                 init: false,
-                userName: ''
+                userName: '',
+                images: [
+                    'img/adium.png',
+                    'img/freebsd.png',
+                    'img/thebat.png',
+                    'img/evernote.png',
+                    'img/linux.png',
+                    'img/firefox.png',
+                    'img/adium.png',
+                    'img/monkeys.png',
+                    'img/evernote.png',
+                    'img/firefox.png',
+                    'img/freebsd.png',
+                    'img/linux.png',
+                    'img/twitter.png',
+                    'img/monkeys.png',
+                    'img/thebat.png',
+                    'img/twitter.png'
+                ]
             };
         };
 
-        setValueUser = () => {
+        setDataUser = () => {
             const userName = $('#name').val();
+            $('#name').val('');
             console.log(userName);
-            this.setState({userName: userName});
+            this.setState({
+                init: true,
+                userName: userName
+            });
         };
 
-        welcome() {
+        startGame = (item, index) => {
+            console.log('forEach');
+            return (
+                // <Game img={item} key={index} />
+                <Game />
+            );
+        };
+
+        welcome = () => {
             return (
                 <div id="welcome">
                     <h3>Введіть своє ім'я</h3>
                     <textarea required wrap="off" id="name"
                               placeholder="Ваше ім'я"></textarea><br />
-                    <button onClick={this.setValueUser} id="newGame">Почати гру</button>
+                    <button onClick={this.setDataUser} id="newGame">Почати гру</button>
                 </div>
             )
-        }
+        };
 
-        render() {
+        render = () => {
             if(!this.state.init) {
+                console.log('welcome');
                 return this.welcome();
-            } else {}
+            } else {
+                // this.state.images.map(this.startGame);
+                this.state.images.forEach(this.startGame);
+            }
+        }
+    }
+
+    class Game extends React.Component {
+        render() {
+            return (
+                <div className="block">
+                    <img src={this.props.img} alt="animal"></img>
+                </div>
+            )
         }
     }
 
