@@ -64,8 +64,7 @@
         startGame = (item, index) => {
             console.log('forEach');
             return (
-                // <Game img={item} key={index} />
-                <Game />
+                <Game img={item} key={index} />
             );
         };
 
@@ -85,8 +84,7 @@
                 console.log('welcome');
                 return this.welcome();
             } else {
-                // this.state.images.map(this.startGame);
-                this.state.images.forEach(this.startGame);
+                return this.state.images.map(this.startGame);
             }
         }
     }
@@ -95,6 +93,7 @@
         render() {
             return (
                 <div className="block">
+                    {console.log(this.props.img)}
                     <img src={this.props.img} alt="animal"></img>
                 </div>
             )
