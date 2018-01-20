@@ -23,6 +23,10 @@
 
 
 <script type="text/babel">
+    {
+        window.gPrevItem = '';
+        window.gCurItem = '';
+    }
 
     class Main extends React.Component {
         constructor(props) {
@@ -54,21 +58,19 @@
         setDataUser = () => {
             const userName = $('#name').val();
             $('#name').val('');
-            console.log(userName);
             this.setState({
                 init: true,
                 userName: userName
             });
         };
 
-        startGame = (item, index) => {
-            console.log('forEach');
+        startGame(item, index) {
             return (
-                <Game img={item} key={index} />
+                <Game img={item} key={index} id={'item' + (index + 1)}/>
             );
         };
 
-        welcome = () => {
+        welcome() {
             return (
                 <div id="welcome">
                     <h3>Введіть своє ім'я</h3>
@@ -79,9 +81,8 @@
             )
         };
 
-        render = () => {
+        render() {
             if(!this.state.init) {
-                console.log('welcome');
                 return this.welcome();
             } else {
                 return this.state.images.map(this.startGame);
@@ -90,14 +91,67 @@
     }
 
     class Game extends React.Component {
-        render() {
+        constructor(props) {
+            super(props);
+            this.state = {
+                comparisonTable: {
+                    item1: 'item7',
+                    item2: 'item11',
+                    item3: 'item15',
+                    item4: 'item9',
+                    item5: 'item12',
+                    item6: 'item10',
+                    item8: 'item14',
+                    item13: 'item16'
+                }
+            };
+        };
+
+        clickBlock = (e) => {
+            const elem = e.target.id;
+            console.log(elem);
+
+            if(gPrevItem === '') {
+                gPrevItem = elem;
+                console.log( 'gPrevItem ' + gPrevItem);
+            } else {
+               gCurItem = elem;
+               console.log('gCurItem ' + gCurItem);
+                this.compare();
+            }
+        };
+
+        compare = () => {
+            if(this.state.comparisonTable[gPrevItem] === gCurItem) {
+                this.deleteBlock();
+            } else if(this.state.comparisonTable[gCurItem] === gPrevItem) {
+                this.deleteBlock();
+            } else {
+                console.log('Think');
+                this.nullifyCounter();
+            }
+        };
+
+        nullifyCounter() {
+            gPrevItem = '';
+            gCurItem = '';
+        };
+
+        deleteBlock = () => {
+            console.log('delete');
+
+
+            this.nullifyCounter();
+        };
+        
+
+        render = () => {
             return (
-                <div className="block">
-                    {console.log(this.props.img)}
+                <div className="block" id={this.props.id} onClick={this.clickBlock}>
                     <img src={this.props.img} alt="animal"></img>
                 </div>
             )
-        }
+        };
     }
 
     ReactDOM.render(<Main/>, document.getElementById("content"));
