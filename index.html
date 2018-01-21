@@ -26,6 +26,8 @@
     {
         window.gPrevItem = '';
         window.gCurItem = '';
+        window.keyPrevItem = null;
+        window.keyCurItem = null;
     }
 
     class Main extends React.Component {
@@ -55,6 +57,17 @@
             };
         };
 
+        welcome() {
+            return (
+                <div id="welcome">
+                    <h3>Введіть своє ім'я</h3>
+                    <textarea required wrap="off" id="name"
+                              placeholder="Ваше ім'я"></textarea><br />
+                    <button onClick={this.setDataUser} id="newGame">Почати гру</button>
+                </div>
+            )
+        };
+
         setDataUser = () => {
             const userName = $('#name').val();
             if(userName == '') {
@@ -68,21 +81,20 @@
             });
         };
 
-        startGame(item, index) {
+        startGame = (item, index) => {
             return (
-                <Game img={item} key={index} id={'item' + (index + 1)}/>
+                <Game img={item}
+                      key={index}
+                      id={'item_' + (index)}
+                      remove={this.deleteBlock} />
             );
         };
 
-        welcome() {
-            return (
-                <div id="welcome">
-                    <h3>Введіть своє ім'я</h3>
-                    <textarea required wrap="off" id="name"
-                              placeholder="Ваше ім'я"></textarea><br />
-                    <button onClick={this.setDataUser} id="newGame">Почати гру</button>
-                </div>
-            )
+        deleteBlock = (item1, item2) => {
+            let arr = this.state.images;
+            arr.splice (item1, 1);
+            arr.splice (item2 - 1, 1);
+            this.setState({images: arr});
         };
 
         render() {
@@ -97,57 +109,45 @@
     class Game extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {
-                comparisonTable: {
-                    item1: 'item7',
-                    item2: 'item11',
-                    item3: 'item15',
-                    item4: 'item9',
-                    item5: 'item12',
-                    item6: 'item10',
-                    item8: 'item14',
-                    item13: 'item16'
-                }
-            };
+            this.state = {};
         };
 
         clickBlock = (e) => {
-            const elem = e.target.id;
-            console.log(elem);
+            const elem = this.props.img;
 
             if(gPrevItem === '') {
                 gPrevItem = elem;
-                console.log( 'gPrevItem ' + gPrevItem);
+                keyPrevItem = this.props.id.charAt(5);
             } else {
-               gCurItem = elem;
-               console.log('gCurItem ' + gCurItem);
+                gCurItem = elem;
+                keyCurItem = this.props.id.charAt(5);
                 this.compare();
             }
         };
 
         compare = () => {
-            if(this.state.comparisonTable[gPrevItem] === gCurItem) {
+            if(gPrevItem === gCurItem && keyPrevItem !== keyCurItem) {
                 this.deleteBlock();
-            } else if(this.state.comparisonTable[gCurItem] === gPrevItem) {
-                this.deleteBlock();
+                this.nullifySelectedItem();
             } else {
                 console.log('Think');
                 this.nullifySelectedItem();
             }
         };
 
+        deleteBlock = () => {
+           if(keyPrevItem > keyCurItem) {
+               this.props.remove(keyCurItem, keyPrevItem);
+           } else {
+                this.props.remove(keyPrevItem, keyCurItem);
+           }
+            console.log('delete');
+        };
+
         nullifySelectedItem() {
             gPrevItem = '';
             gCurItem = '';
         };
-
-        deleteBlock = () => {
-            console.log('delete');
-
-
-            this.nullifySelectedItem();
-        };
-        
 
         render = () => {
             return (
