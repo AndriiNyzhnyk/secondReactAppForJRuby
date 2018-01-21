@@ -132,11 +132,11 @@
                 this.deleteBlock();
             } else {
                 console.log('Think');
-                this.nullifyCounter();
+                this.nullifySelectedItem();
             }
         };
 
-        nullifyCounter() {
+        nullifySelectedItem() {
             gPrevItem = '';
             gCurItem = '';
         };
@@ -145,7 +145,7 @@
             console.log('delete');
 
 
-            this.nullifyCounter();
+            this.nullifySelectedItem();
         };
         
 
