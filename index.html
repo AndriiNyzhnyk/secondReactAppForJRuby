@@ -21,13 +21,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-
 <script type="text/babel">
     {
         window.gPrevItem = '';
         window.gCurItem = '';
         window.keyPrevItem = null;
         window.keyCurItem = null;
+        window.idPrevItem = '';
+        window.idCurItem = '';
     }
 
     class Main extends React.Component {
@@ -117,36 +118,65 @@
 
             if(gPrevItem === '') {
                 gPrevItem = elem;
-                keyPrevItem = this.props.id.charAt(5);
+                idPrevItem = this.props.id;
+                keyPrevItem = idPrevItem.charAt(5);
+                this.showImg(this.props.id);
             } else {
                 gCurItem = elem;
-                keyCurItem = this.props.id.charAt(5);
+                idCurItem = this.props.id;
+                keyCurItem = idCurItem.charAt(5);
+                if(gPrevItem === gCurItem) this.showImg(this.props.id);
                 this.compare();
             }
         };
 
         compare = () => {
             if(gPrevItem === gCurItem && keyPrevItem !== keyCurItem) {
+                alert('Молодець');
+                this.hideImages(idPrevItem, idCurItem);
                 this.deleteBlock();
-                this.nullifySelectedItem();
             } else {
-                console.log('Think');
+                alert('Подумай краще !');
+                this.hideImages(idPrevItem, idCurItem);
                 this.nullifySelectedItem();
             }
         };
 
         deleteBlock = () => {
-           if(keyPrevItem > keyCurItem) {
-               this.props.remove(keyCurItem, keyPrevItem);
-           } else {
-                this.props.remove(keyPrevItem, keyCurItem);
-           }
-            console.log('delete');
+            setTimeout( () => {
+               if(keyPrevItem > keyCurItem) {
+                   this.props.remove(keyCurItem, keyPrevItem);
+               } else {
+                    this.props.remove(keyPrevItem, keyCurItem);
+               }
+                console.log('delete');
+                this.nullifySelectedItem();
+            },900);
         };
 
         nullifySelectedItem() {
             gPrevItem = '';
             gCurItem = '';
+        };
+
+        showImg = (elem) => {
+            console.log('showImg');
+            console.log(elem);
+            $('#' + elem + ' img').show();
+        };
+
+        hideImg = (elem) => {
+            $('#' + elem + ' img').hide();
+        };
+
+        hideImages = (elem1, elem2) => {
+            const item1 = elem1;
+            const item2 = elem2;
+
+            setTimeout( () => {
+                $('#' + item1 + ' img').hide();
+                $('#' + item2 + ' img').hide();
+            }, 800);
         };
 
         render = () => {
