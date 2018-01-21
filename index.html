@@ -57,6 +57,10 @@
 
         setDataUser = () => {
             const userName = $('#name').val();
+            if(userName == '') {
+                alert('Введіть коректне ім\'я');
+                return;
+            }
             $('#name').val('');
             this.setState({
                 init: true,
