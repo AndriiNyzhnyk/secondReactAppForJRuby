@@ -102,7 +102,7 @@
             if(!this.state.init) {
                 return this.welcome();
             } else {
-                return this.state.images.map(this.startGame);
+                return this.state.images.map(this.startGame)
             }
         }
     }
@@ -110,7 +110,10 @@
     class Game extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {};
+            this.state = {
+                countTick: 0,
+                successTick: 0
+            };
         };
 
         clickBlock = (e) => {
@@ -125,19 +128,22 @@
                 gCurItem = elem;
                 idCurItem = this.props.id;
                 keyCurItem = idCurItem.charAt(5);
-                if(gPrevItem === gCurItem) this.showImg(this.props.id);
                 this.compare();
             }
         };
 
         compare = () => {
             if(gPrevItem === gCurItem && keyPrevItem !== keyCurItem) {
+                this.showImg(this.props.id);
                 alert('Молодець');
+                this.tick();
+                this.successfulTick();
                 this.hideImages(idPrevItem, idCurItem);
                 this.deleteBlock();
             } else {
                 alert('Подумай краще !');
-                this.hideImages(idPrevItem, idCurItem);
+                this.tick();
+                this.hideImg(idPrevItem);
                 this.nullifySelectedItem();
             }
         };
@@ -154,7 +160,7 @@
             },900);
         };
 
-        nullifySelectedItem() {
+        nullifySelectedItem = () => {
             gPrevItem = '';
             gCurItem = '';
         };
@@ -179,18 +185,59 @@
             }, 800);
         };
 
+        tick = () => {
+            let count = this.state.countTick + 1;
+            this.setState({countTick: count});
+            console.log(`coutnTick = ${this.state.countTick}`);
+        };
+
+        successfulTick = () => {
+            let sTick = this.state.successTick + 1;
+            this.setState({successTick: sTick});
+            if(this.state.successTick === 8) {
+                console.log('game over');
+                // this.congratuation();
+            }
+            console.log(`this.state.successTick = ${this.state.successTick}` );
+        };
+
+        congratuation = () => {
+            StartStop();
+            let time = $('#timer').val();
+            $('#tickResult').val('' + this.countTick);
+            $('#timeResult').val('' + time);
+            let url = "#openModal";
+            $(location).attr('href', url);
+        };
+
         render = () => {
             return (
-                <div className="block" id={this.props.id} onClick={this.clickBlock}>
-                    <img src={this.props.img} alt="animal"></img>
+                <div id="game">
+                    <div className="block" id={this.props.id} onClick={this.clickBlock}>
+                        <img src={this.props.img} alt="animal"></img>
+                    </div>
                 </div>
             )
         };
     }
 
-    ReactDOM.render(<Main/>, document.getElementById("content"));
+    class Congratuation extends React.Component {
+        render() {
+            <div id="openModal" class="modalDialog">
+                <div>
+                    <a href="#close" title="Закрити" class="close">X</a>
+                    <h3>Вітаємо, Ви перемогли</h3>
+                    <p>Виконано ходів:</p>
+                    <textarea class="congrat" id="tickResult" readonly></textarea>
+                    <p>Пройшло часу:</p>
+                    <textarea class="congrat" id="timeResult" readonly></textarea>
+                </div>
+            </div>
+        }
+    }
+
+    ReactDOM.render( <Main />, document.getElementById("content"));
 
 </script>
-
 </body>
 </html>
