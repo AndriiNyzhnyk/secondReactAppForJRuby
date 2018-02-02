@@ -18,18 +18,25 @@
 <script src="https://wzrd.in/standalone/es7-shim@latest"></script>
 <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/react-router-dom/umd/react-router-dom.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <script type="text/babel">
-    {
-        window.gPrevItem = '';
-        window.gCurItem = '';
-        window.keyPrevItem = null;
-        window.keyCurItem = null;
-        window.idPrevItem = '';
-        window.idCurItem = '';
-    }
+    const Router = ReactRouterDOM.BrowserRouter;
+    const Route = ReactRouterDOM.Route;
+    const Switch = ReactRouterDOM.Switch;
+    const Link = ReactRouterDOM.Link;
+    const Redirect = ReactRouterDOM.Redirect;
+
+    let gPrevItem = '';
+    let gCurItem = '';
+    let keyPrevItem = null;
+    let keyCurItem = null;
+    let idPrevItem = '';
+    let idCurItem = '';
+    let countTick = 0;
+    let successTick = 0;
 
     class Main extends React.Component {
         constructor(props) {
@@ -99,10 +106,10 @@
         };
 
         render() {
-            if(!this.state.init) {
-                return this.welcome();
-            } else {
+            if(this.state.init) {
                 return this.state.images.map(this.startGame)
+            } else {
+                return this.welcome();
             }
         }
     }
@@ -110,10 +117,7 @@
     class Game extends React.Component {
         constructor(props) {
             super(props);
-            this.state = {
-                countTick: 0,
-                successTick: 0
-            };
+            this.state = {};
         };
 
         clickBlock = (e) => {
@@ -135,7 +139,7 @@
         compare = () => {
             if(gPrevItem === gCurItem && keyPrevItem !== keyCurItem) {
                 this.showImg(this.props.id);
-                alert('Молодець');
+                alert('Молодець !');
                 this.tick();
                 this.successfulTick();
                 this.hideImages(idPrevItem, idCurItem);
@@ -186,27 +190,21 @@
         };
 
         tick = () => {
-            let count = this.state.countTick + 1;
-            this.setState({countTick: count});
-            console.log(`coutnTick = ${this.state.countTick}`);
+            countTick++;
         };
 
         successfulTick = () => {
-            let sTick = this.state.successTick + 1;
-            this.setState({successTick: sTick});
-            if(this.state.successTick === 8) {
+           successTick++;
+            if(successTick === 8) {
                 console.log('game over');
-                // this.congratuation();
+                this.congratuation();
             }
-            console.log(`this.state.successTick = ${this.state.successTick}` );
         };
 
         congratuation = () => {
-            StartStop();
-            let time = $('#timer').val();
-            $('#tickResult').val('' + this.countTick);
-            $('#timeResult').val('' + time);
-            let url = "#openModal";
+            $('#tickResult').val('' + countTick);
+            $('#timeResult').val('');
+            let url = "/congratuation";
             $(location).attr('href', url);
         };
 
@@ -223,6 +221,7 @@
 
     class Congratuation extends React.Component {
         render() {
+            return (
             <div id="openModal" class="modalDialog">
                 <div>
                     <a href="#close" title="Закрити" class="close">X</a>
@@ -233,10 +232,25 @@
                     <textarea class="congrat" id="timeResult" readonly></textarea>
                 </div>
             </div>
+            )
         }
     }
 
-    ReactDOM.render( <Main />, document.getElementById("content"));
+    class NotFound extends React.Component{
+        render(){
+            return <h2>NotFound</h2>;
+        }
+    }
+
+
+    ReactDOM.render(
+        <Router>
+            <Switch>
+                <Route exact path="/" component={Main} />
+                <Route path="/congratuation" component={Congratuation} />
+                <Route component={NotFound} />
+            </Switch>
+        </Router>, document.getElementById("content"));
 
 </script>
 </body>
