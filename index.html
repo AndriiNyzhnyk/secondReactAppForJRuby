@@ -38,6 +38,7 @@
             this.state = {
                 init: false,
                 userName: '',
+                finish: false,
                 images: [
                     'img/adium.png',
                     'img/freebsd.png',
@@ -94,17 +95,30 @@
 
         deleteBlock = (item1, item2) => {
             let arr = this.state.images;
-            arr.splice (item1, 1);
-            arr.splice (item2 - 1, 1);
+
+            if(item1 > item2) {
+                arr.splice (item1, 1);
+                arr.splice (item2, 1);
+            } else {
+                arr.splice(item2, 1);
+                arr.splice(item1, 1);
+            }
             this.setState({images: arr});
+            this.gameOver();
+        };
+
+        gameOver = () => {
+            if(this.state.images.length === 0) {
+                this.setState({finish: true});
+            }
         };
 
         render() {
-            if(this.state.init) {
+            if(this.state.init && this.state.finish === false) {
                 return this.state.images.map(this.startGame)
-            } else {
+            } else if (this.state.finish === false){
                 return this.welcome();
-            }
+            } else return (<Congratuation />)
         }
     }
 
@@ -148,11 +162,7 @@
 
         deleteBlock = () => {
             setTimeout( () => {
-               if(keyPrevItem > keyCurItem) {
-                   this.props.remove(keyCurItem, keyPrevItem);
-               } else {
-                    this.props.remove(keyPrevItem, keyCurItem);
-               }
+                this.props.remove(keyPrevItem, keyCurItem);
                 console.log('delete');
                 this.nullifySelectedItem();
             },900);
@@ -216,10 +226,9 @@
             return (
             <div id="openModal" class="modalDialog">
                 <div>
-                    <a href="#close" title="Закрити" class="close">X</a>
                     <h3>Вітаємо, Ви перемогли</h3>
                     <p>Виконано ходів:</p>
-                    <textarea class="congrat" id="tickResult" readonly></textarea>
+                    <textarea class="congrat" id="tickResult" readonly>{countTick}</textarea>
                     <p>Пройшло часу:</p>
                     <textarea class="congrat" id="timeResult" readonly></textarea>
                 </div>
