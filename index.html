@@ -23,12 +23,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <script type="text/babel">
-    const Router = ReactRouterDOM.BrowserRouter;
-    const Route = ReactRouterDOM.Route;
-    const Switch = ReactRouterDOM.Switch;
-    const Link = ReactRouterDOM.Link;
-    const Redirect = ReactRouterDOM.Redirect;
-
     let gPrevItem = '';
     let gCurItem = '';
     let keyPrevItem = null;
@@ -204,8 +198,6 @@
         congratuation = () => {
             $('#tickResult').val('' + countTick);
             $('#timeResult').val('');
-            let url = "/congratuation";
-            $(location).attr('href', url);
         };
 
         render = () => {
@@ -236,21 +228,7 @@
         }
     }
 
-    class NotFound extends React.Component{
-        render(){
-            return <h2>NotFound</h2>;
-        }
-    }
-
-
-    ReactDOM.render(
-        <Router>
-            <Switch>
-                <Route exact path="/" component={Main} />
-                <Route path="/congratuation" component={Congratuation} />
-                <Route component={NotFound} />
-            </Switch>
-        </Router>, document.getElementById("content"));
+    ReactDOM.render(<Main/>, document.getElementById("content"));
 
 </script>
 </body>
