@@ -120,7 +120,11 @@
 
         render() {
             if(this.state.init && this.state.finish === false) {
-                return this.state.images.map(this.startGame)
+                return (
+                    <div>
+                        <Counter />
+                        {this.state.images.map(this.startGame)}
+                    </div>)
             } else if (this.state.finish === false){
                 return this.welcome();
             } else return (<Congratuation />)
@@ -225,7 +229,18 @@
         }
     }
 
-    ReactDOM.render(<Main/>, document.getElementById("content"));
+    class Counter extends React.Component {
+        render() {
+            return (
+                <div id="counter">
+                    <p>Виконано ходів:</p>
+                    <input type="text" value={countTick} readOnly/>
+                </div>
+            )
+        }
+    }
+
+    ReactDOM.render(<Main />, document.getElementById("content"));
 
 </script>
 </body>
