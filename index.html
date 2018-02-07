@@ -30,7 +30,6 @@
     let idPrevItem = '';
     let idCurItem = '';
     let countTick = 0;
-    let successTick = 0;
     let timerStart;
     let timerEnd;
     let timeGame;
@@ -86,7 +85,6 @@
                 userName: userName
             });
             timerStart = new Date().getTime();
-            console.log(timerStart);
         };
 
         startGame = (item, index) => {
@@ -169,7 +167,6 @@
         deleteBlock = () => {
             setTimeout( () => {
                 this.props.remove(keyPrevItem, keyCurItem);
-                console.log('delete');
                 this.nullifySelectedItem();
             },900);
         };
@@ -180,8 +177,6 @@
         };
 
         showImg = (elem) => {
-            console.log('showImg');
-            console.log(elem);
             $('#' + elem + ' img').show();
         };
 
@@ -202,7 +197,6 @@
         tick = () => {
             countTick++;
         };
-
 
         render = () => {
             return (
